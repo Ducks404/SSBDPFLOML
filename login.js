@@ -14,19 +14,35 @@ let activeIndex=0;
 const pages = document.getElementsByClassName("page");
 
 const handleFlipPage = () => {
+    const currentPage = document.querySelector(`[data-index="${activeIndex}"]`);
 
-    // Move shown up
-    const currentPage = document.querySelector(`[data-index="${activeIndex}"]`)
-    currentPage.dataset.status = 'after';
-    
-    // Move not shown down
-    const prevIndex = activeIndex - 1 >= 0 ? activeIndex - 1 : 7;
+    if (activeIndex==7) {
+        // Move last page to top
+        currentPage.style.zIndex = 8;
 
-    const prevPage = document.querySelector(`[data-index="${prevIndex}"]`);
+        // Move all down
+        for (let i = 0; i < pages.length; i++) {
+            let elem = pages[i];
+            if (elem.dataset.status=='after') {
+                elem.dataset.status='shown';
+            }
+        }
 
-    prevPage.dataset.status = 'shown';
+        // Move active up
+        currentPage.dataset.status = 'after';
 
-    // Update activeIndex
+        setTimeout(function() {
+            // Move active to bottom
+            currentPage.style.zIndex = 0;
+            
+            //Move active down
+            currentPage.dataset.status = 'shown';
+        },1500);
+
+    } else {
+        // Move active up
+        currentPage.dataset.status = 'after';
+    }
 
     activeIndex = activeIndex + 1 <= pages.length - 1 ? activeIndex + 1 : 0;
 }
